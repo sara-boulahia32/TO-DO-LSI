@@ -18,7 +18,7 @@
             padding: .75rem 1rem;
             margin-bottom: 1.3rem;
             cursor: pointer;
-            animation: fadeIn 0.5s ease forwards;
+            /* animation: fadeIn 0.5s ease forwards; */
             
 
             & h6 {
@@ -190,7 +190,7 @@
         <section class="relative z-5 flex flex-col md:flex-row items-center justify-between px-8 md:px-40 mb-5">
             <img src="image/a_simple__fun__and_creative_to-do_list_logo_with_the_colors_customCream___E6E6DC__customGray___908787__customBrown___CFC099__customGreen___6BB5B3-removebg-preview.png" width="100" height="auto" alt="logo" />
             <div class="text-customDarkBrown">
-                <h3 class="text-lg font-semibold">Follow us</h3>
+                <h3 class="text-2xl font-semibold">Follow us</h3>
                 <div class="flex space-x-4">
                     <a href="#"><i class='bx bxl-facebook-circle'></i></a>
                     <a href="#"><i class='bx bxl-pinterest'></i></a>
@@ -208,7 +208,7 @@
             <div class="flex flex-col sm:flex-row gap-10 md:gap-20 w-full">
                 <div>
                     <h3 class="text-2xl font-semibold mb-3 text-customDarkBrown">BLOC</h3>
-                    <div>
+                    <div class="text-2xl">
                         <div><a href="#" class="text-gray-700 hover:text-customDarkBrown">Home</a></div>
                         <div><a href="#" class="text-gray-700 hover:text-customDarkBrown">Favoris</a></div>
                         <div><a href="#" class="text-gray-700 hover:text-customDarkBrown">Modéles</a></div>
@@ -219,7 +219,7 @@
                 </div>
                 <div>
                     <h3 class="text-2xl font-semibold mb-3 text-customDarkBrown">ABOUT-US</h3>
-                    <div>
+                    <div class="text-2xl">
                         <p>(123) 456-7891</p>
                         <a href="#" class="text-gray-700 hover:text-customDarkBrown">taskFlow@gmail.co</a>
                         <p>Hay jerifate, Safi, Bouzid</p>
@@ -233,7 +233,7 @@
             <div class="flex flex-col sm:flex-row gap-10 md:gap-10 sm:gap-4 w-full">
                 <div>
                     <h3 class="text-2xl font-semibold mb-3 text-customDarkBrown">PRODUCTS</h3>
-                    <div>
+                    <div  class="text-2xl">
                         <p>Acess apps</p>
                         <a href="#" class="text-gray-700 hover:text-customDarkBrown">taskFlow@gmail.co</a>
                         <p>Dreaming Desktop</p>
@@ -242,7 +242,7 @@
                 </div>
                 <div>
                     <h3 class="text-2xl font-semibold mb-3 text-customDarkBrown">SHOP</h3>
-                    <div>
+                    <div class="text-2xl">
                         <div><a href="#" class="text-gray-700 hover:text-customDarkBrown">Contact us</a></div>
                         <p>Subscribe</p>
                         <div><a href="#" class="text-gray-700 hover:text-customDarkBrown">Profil</a></div>
@@ -325,32 +325,31 @@
         const description = document.getElementById('description').value;
         const priority = document.querySelector('#priority-menu button').textContent;
         const state = document.querySelector('#state-menu button').textContent;
-        // check if empty 
+        // validation de formulaire 
         if (!title || !description || priority === 'Priority' || state === 'State') {
-            alert.classList.remove('hidden'); // alert is visible by removing the hidden class 
+            alert.classList.remove('hidden'); 
             return;
         }
         // if all validated call function create task passing these arguments
         createTask(title, description, priority, state);
         // createTaskPopup.classList.add('hidden');
         form.reset();
-        alert.classList.add('hidden');// alert is hidden now 
+        alert.classList.add('hidden');
     });
     
-    // function for creating a new task 4 arguments/parameters
-    // create a new html element and popuolates it with the provided data 
+    // 4 arguments/parameters
+    // create a new html element and populates it with the provided data 
     function createTask(title, description, priority, state) {
-        // create the task element  
         const date = document.getElementById('date').value;
+        // create the task element  
         const task = document.createElement('div');
         task.className = 'task';// for styling 
-        
-        // Set border color based on priority
+
         const borderColor = {
             'P1': 'border-red',
             'P2': 'border-orange',
             'P3': 'border-green'
-        }[priority];// an object to define each priority class to css styling 
+        }[priority];// an object to define class to css styling 
         
         task.classList.add(borderColor);
     
@@ -366,6 +365,10 @@
                 </select>
             </div>
         `;
+        // Animation js before
+        task.style.opacity = 0;
+        task.style.transform = 'translateY(-10px)';
+        task.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     
         // Add task to status+update the corresponding status's count
         const container = {
@@ -374,15 +377,20 @@
             'Completed': doneTasks
         }[state];// accesses the value associated with the current task 
         
-        // add below the appropriate task
         container.appendChild(task);
-        updateCounts(); // add count 
-    
-        // lists to changes and handles them by moving tasks to their corresponding status
+
+        task.offsetHeight; // recalcul du reflow apres la transformation et l'opacité 
+
+        // animation after 
+        task.style.opacity = 1;
+        task.style.transform = 'translateY(0)';
+
+        updateCounts();
+
         // changement de statut
         const select = task.querySelector('select');// select drop down menu 
-        select.addEventListener('change', () => {// event chenge triggered when the user selects a different option from the dropdown 
-            const newContainer = {// similar to last one 
+        select.addEventListener('change', () => {
+            const newContainer = {
                 'To Do': todoTasks,
                 'Doing': inprogressTasks,
                 'Completed': doneTasks
@@ -394,11 +402,11 @@
     }
     
     function updateCounts() {
-        todoCount.textContent = todoTasks.children.length;// accesses all tasks marked as to do and retrieves the number of child elemnts and displays them=retourne une collection en direct (HTMLCollection)
-        inprogressCount.textContent = inprogressTasks.children.length;// counting tasks in progress 
-        doneCount.textContent = doneTasks.children.length;// similar 
+        todoCount.textContent = todoTasks.children.length;// retourne une collection en direct (HTMLCollection)
+        inprogressCount.textContent = inprogressTasks.children.length;
+        doneCount.textContent = doneTasks.children.length;
     }
-    
+        
     // Search input changes in a search field 
     const searchInput = document.querySelector('input[type="text"]');
     searchInput.addEventListener('input', () => {
